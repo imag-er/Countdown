@@ -17,8 +17,6 @@ LRESULT APIENTRY MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 VOID MainWndInit(HWND hWnd);
 VOID MainWndPaint(HWND hWnd);
 VOID MainWndCleanUp();
-VOID MainWndTimerProc(HWND, UINT, WPARAM, LPARAM);
-
 //SetMainWindow.cpp
 VOID RegisterMainWndClass();
 HWND CreateMainWnd();

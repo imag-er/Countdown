@@ -5,6 +5,39 @@ HDC g_bufDC;
 INT g_nDaysToCEE;
 HBITMAP hBgr;
 HBITMAP hEmptyMap;
+HANDLE hTimerThread;
+
+LRESULT APIENTRY MainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_CREATE:
+		MainWndInit(hWnd);
+		break;
+
+	case WM_PAINT:
+		MainWndPaint(hWnd);
+		break;
+
+	case WM_DESTROY:
+		MainWndCleanUp();
+		PostQuitMessage(0);
+		break;
+
+	default:
+		return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+	}
+	return DefWindowProcW(hWnd, uMsg, wParam, lParam);
+}
+VOID TimerFunc()
+{
+	while (TRUE)
+	{
+		InvalidateRect(g_hMainWnd, NULL, 0);
+
+		Sleep(1000);
+	}
+}
 VOID MainWndPaint(HWND hWnd)
 {
 	static LPWSTR szShowStr = new WCHAR[22];
@@ -47,6 +80,7 @@ VOID MainWndInit(HWND hWnd)
 	//calc days
 	g_nDaysToCEE = (1654531200ll - std::time(0)) / 86400;
 
+	hTimerThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TimerFunc, NULL, 0, NULL);
 }
 VOID MainWndCleanUp()
 {
@@ -56,15 +90,5 @@ VOID MainWndCleanUp()
 	DeleteDC(g_hDC);
 	DeleteDC(g_mDC);
 	DeleteDC(g_bufDC);
-}
-VOID MainWndTimerProc(HWND hWnd, UINT uMenu, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMenu)
-	{
-	case IDT_TIME:
-		SendMessageW(hWnd, WM_PAINT, 0, 0);
-		break;
-	default:
-		break;
-	}
+	CloseHandle(hTimerThread);
 }

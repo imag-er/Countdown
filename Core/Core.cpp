@@ -3,7 +3,6 @@ VOID AllInit(HINSTANCE hInstance)
 {
     // AllocConsole();
     szMainWndClassname = L"MainWindow";
-    szCtlWndClassname = L"ControlWindow";
     SCREENWIDTH = GetSystemMetrics(SM_CXSCREEN);
     SCREENHEIGHT = GetSystemMetrics(SM_CYSCREEN);
 
@@ -33,30 +32,24 @@ VOID AllCleanUp()
 {
     DeleteObject(g_hFont);
     UnregisterClassW(szMainWndClassname, NULL);
-    UnregisterClassW(szCtlWndClassname, NULL);
 }
 VOID MessageLoop()
 {
     MSG msg={0};
-    while (msg.message != WM_QUIT)
+    while (0!=GetMessageW(&msg,NULL,0,0))
     {
-        if (PeekMessageW(&msg, 0, 0, 0, PM_REMOVE))
-        {
-            TranslateMessage(&msg);
-            DispatchMessageW(&msg);
-        }
+        TranslateMessage(&msg);
+        DispatchMessageW(&msg);
     }
     return;
 }
 VOID RegisterAllClass()
 {
     RegisterMainWndClass();
-    RegisterCtlWndClass();
     return;
 }
 VOID CreateAllWindow()
 {
     g_hMainWnd = CreateMainWnd();
-    g_hCtlWnd = CreateCtlWnd();
     return;
 }
