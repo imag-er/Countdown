@@ -7,7 +7,7 @@ HBITMAP hBgr;
 HBITMAP hEmptyMap;
 VOID MainWndPaint(HWND hWnd)
 {
-	LPWSTR szShowStr = new WCHAR[22];
+	static LPWSTR szShowStr = new WCHAR[22];
 
 	static SYSTEMTIME st;
 	GetLocalTime(&st);
@@ -15,11 +15,10 @@ VOID MainWndPaint(HWND hWnd)
 	static RECT r = { 0,100,SCREENWIDTH,SCREENHEIGHT };
 
 	BitBlt(g_mDC, 0, 0, SCREENWIDTH, SCREENHEIGHT, g_bufDC, 0, 0, SRCCOPY);
-	wsprintfW(szShowStr, L"%d:%d:%d\n距离高考%d天\0", st.wHour, st.wMinute, st.wSecond, g_nDaysToCEE);
+	wsprintfW(szShowStr, L"距离高考%d天\n%d:%d:%d\0", g_nDaysToCEE, st.wHour, st.wMinute, st.wSecond);
 	DrawTextW(g_mDC, szShowStr, -1, &r, DT_CENTER);
 
 	BitBlt(g_hDC, 0, 0, SCREENWIDTH, SCREENHEIGHT, g_mDC, 0, 0, SRCCOPY);
-	delete[] szShowStr;
 	return;
 
 }
