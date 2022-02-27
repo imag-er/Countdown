@@ -34,7 +34,6 @@ VOID TimerFunc()
 	while (TRUE)
 	{
 		InvalidateRect(g_hMainWnd, NULL, 0);
-
 		Sleep(1000);
 	}
 }
