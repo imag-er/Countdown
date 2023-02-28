@@ -1,4 +1,4 @@
-#pragma once
+
 #include "Exception.h"
 BOOL _makeErrStr(LPWSTR lpszStr, LPCWSTR lpRemindStr)
 {

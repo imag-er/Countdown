@@ -1,5 +1,6 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 HWND g_hWorkerW2;
+
 
 VOID RegisterMainWndClass()
 {
@@ -39,6 +40,11 @@ HWND CreateMainWnd()
 
     return ret;
 }
+
+
+// 最有技术含量的两部分
+// 原理我现在也不太能理解了 但是实现方法大概记得
+//  英文是我当时写的时候加的注释
 BOOL EnumWindowProc(HWND hEnumWnd, LPARAM lParam)
 {
     HWND hShell = FindWindowExW(hEnumWnd, 0, L"SHELLDLL_DefView", NULL);
@@ -49,13 +55,14 @@ BOOL EnumWindowProc(HWND hEnumWnd, LPARAM lParam)
     }
     return TRUE;
 }
-//��ȷ����
+//明确语义
 HWND SetMainWndChildOfWorkerW2(HWND hBgrWnd)
 {
     HWND hDesktop = FindWindowW(L"Progman", L"Program Manager");//get the handle of desktop
-    _condbg(L"�Ҳ������洰�ھ��");
+    _condbg(L"找不到桌面窗口句柄");
 
     SendMessageW(hDesktop, 0x52c, 0, 0);//destruct the desktop onto 3 layers
+    // desktop_icon workerw2 wallpaper
 
     EnumWindows(EnumWindowProc, 0);//get the handle of workerw2
 

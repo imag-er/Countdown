@@ -1,12 +1,16 @@
 #include "Core.h"
 VOID AllInit(HINSTANCE hInstance)
 {
-    // AllocConsole();
+    AllocConsole();
     szMainWndClassname = L"MainWindow";
-    SCREENWIDTH = GetSystemMetrics(SM_CXSCREEN);
-    SCREENHEIGHT = GetSystemMetrics(SM_CYSCREEN);
+    // 我的电脑开了125%缩放 这里有问题 所以手动指定分辨率
+    // SCREENWIDTH = GetSystemMetrics(SM_CXSCREEN);
+    // SCREENHEIGHT = GetSystemMetrics(SM_CYSCREEN);
+    SCREENHEIGHT = 1080;
+    SCREENWIDTH = 1920;
 
-    g_hFont=CreateFontW
+    // 创建更大的字体 原有字体大小是无法调整的
+    g_hFont = CreateFontW
     (
         180,
         80,
@@ -21,13 +25,15 @@ VOID AllInit(HINSTANCE hInstance)
         CLIP_CHARACTER_PRECIS,
         DEFAULT_QUALITY,
         FF_DONTCARE,
-        L"΢���ź�"
+        L"Microsoft Yahei UI"
     );
- 
+
     RegisterAllClass();
     CreateAllWindow();
     return;
 }
+
+
 VOID AllCleanUp()
 {
     DeleteObject(g_hFont);
@@ -35,8 +41,8 @@ VOID AllCleanUp()
 }
 VOID MessageLoop()
 {
-    MSG msg={0};
-    while (0!=GetMessageW(&msg,NULL,0,0))
+    MSG msg = { 0 };
+    while (0 != GetMessageW(&msg, NULL, 0, 0))
     {
         TranslateMessage(&msg);
         DispatchMessageW(&msg);

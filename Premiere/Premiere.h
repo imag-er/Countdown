@@ -1,4 +1,6 @@
 #pragma once
+
+// premiere.h 定义了程序运行过程中用到的一些全局变量
 #ifndef PERMIERE
 #define PREMIERE
 #include <windows.h>

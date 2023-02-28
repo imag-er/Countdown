@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 HDC g_hDC;
 HDC g_mDC;
 HDC g_bufDC;
@@ -45,17 +45,23 @@ VOID MainWndPaint(HWND hWnd)
 	GetLocalTime(&st);
 
 	static RECT r = { 0,100,SCREENWIDTH,SCREENHEIGHT };
-
+	// 把bufdc里的背景图拷贝到mdc
 	BitBlt(g_mDC, 0, 0, SCREENWIDTH, SCREENHEIGHT, g_bufDC, 0, 0, SRCCOPY);
-	wsprintfW(szShowStr, L"����߿�%d��\n%d:%d:%d\0", g_nDaysToCEE, st.wHour, st.wMinute, st.wSecond);
+
+	// 输出文字
+	wsprintfW(szShowStr, L"距离高考还有%d天\n%d:%d:%d\0", g_nDaysToCEE, st.wHour, st.wMinute, st.wSecond);
 	DrawTextW(g_mDC, szShowStr, -1, &r, DT_CENTER);
 
+	// 把mdc拷贝到hdc
 	BitBlt(g_hDC, 0, 0, SCREENWIDTH, SCREENHEIGHT, g_mDC, 0, 0, SRCCOPY);
 	return;
 
 }
 VOID MainWndInit(HWND hWnd)
 {
+	// 窗口初始化
+	// 资源加载及初始化
+
 	//initialize window pos
 	MoveWindow(hWnd, 0, 0, SCREENWIDTH, SCREENHEIGHT, TRUE);
 	SetMainWndChildOfWorkerW2(hWnd);
@@ -65,21 +71,25 @@ VOID MainWndInit(HWND hWnd)
 	g_hDC = GetWindowDC(hWnd);
 	g_mDC = CreateCompatibleDC(g_hDC);
 	g_bufDC = CreateCompatibleDC(g_hDC);
-	
-	SelectObject(g_bufDC, hBgr);//��bufdc���ϱ���ͼ
-	hEmptyMap = CreateCompatibleBitmap(g_hDC, SCREENWIDTH, SCREENHEIGHT);//Ϊmdc��������
-	
-	SelectObject(g_mDC, hEmptyMap);
-	SelectObject(g_mDC, g_hFont);//����
-	SetBkMode(g_mDC, TRANSPARENT);//͸��
+
+	SelectObject(g_bufDC, hBgr);// 把背景选入bufdc
+	hEmptyMap = CreateCompatibleBitmap(g_hDC, SCREENWIDTH, SCREENHEIGHT);// 为mdc创建画布
+
+	SelectObject(g_mDC, hEmptyMap); // 把画布选入mdc
+	SelectObject(g_mDC, g_hFont); // 把字体文件选入mdc
+	SetBkMode(g_mDC, TRANSPARENT); // 设置mdc背景透明
 
 	//set timer
 	SetTimer(hWnd, IDT_TIME, 1000, NULL);
 
 	//calc days
+	// 2022.6.7 00.00.00
 	g_nDaysToCEE = (1654531200ll - std::time(0)) / 86400;
 
+	// 计时器线程
 	hTimerThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TimerFunc, NULL, 0, NULL);
+
+	return;
 }
 VOID MainWndCleanUp()
 {
@@ -90,4 +100,5 @@ VOID MainWndCleanUp()
 	DeleteDC(g_mDC);
 	DeleteDC(g_bufDC);
 	CloseHandle(hTimerThread);
+	return;
 }
